@@ -1,26 +1,66 @@
-from flask import Flask, render_template
+from flask import Flask , render_template, flash, redirect, request, session, make_response, jsonify, abort, url_for
 import requests
-from flaskwebgui import FlaskUI
+import urllib.parse
+from datetime import datetime, timedelta
+
+
 
 #Flask Set up
 app = Flask(__name__)
-ui = FlaskUI(app=app, server="flask")
 app.secret_key = "hello_kamran"
 
-#Spotify Vars
-client_id = '1bc96559e04b4be1a0d5726ffe196590'
-client_skey = 'e43a7e158ede4a138f116cc70d63a449'
-redirect_uri = 'http://localhost:5000/callback'
+client_secret = "e43a7e158ede4a138f116cc70d63a449"
+client_id = "1bc96559e04b4be1a0d5726ffe196590"
+redirect_uri = "http://127.0.0.1:5000/callback"
 
-#Spotify URLs
-spotify_auth_url = "https://accounts.spotify.com/authorize"
+AUTH_URL = "https://accounts.spotify.com/authorize"
 token_url = "https://accounts.spotify.com/api/token"
-api_url = 'https://api.spotify.com/v1/'
+api_base_url = "https://api.spotify.com/v1/"
 
 
 @app.route('/')
 def indexpage():
     return render_template('index.html')
 
+
+@app.route('/login', methods=['GET', 'POST'])
+def authorize():
+    scope = "user-read-private user-read-email"
+    
+    params = {
+         'client_id': client_id,
+         'scope' : scope ,
+         'response_type' : 'code',
+         'redirect_uri' : redirect_uri,
+         'show_dialog' : True
+    }
+
+    auth_url = f"{AUTH_URL}?{urllib.parse.urlencode(params)}"
+    return redirect(auth_url)
+	
+    
+@app.route('/callback')
+def callback():
+    if 'error' in request.args:
+        return "hello"
+    if 'code' in request.args:
+        req_body = {
+            'code' : request.args['code'],
+            'grant_type' : 'authorization_code',
+            'redirect_uri' :  redirect_uri,
+            'client_id' : client_id,
+            'client_secret' : client_secret
+        }
+
+        response = requests.post(token_url , data= req_body)
+        token_info = response.json()
+
+        session['access_token'] = token_info['access_token']
+        session['refresh_token'] = token_info['refresh_token']
+        session['expires_at'] = datetime.now().timestamp() + token_info['expires_in']
+
+        return redirect('/')
+
+	
 if __name__ == "__main__" :
-    ui.run()
+    app.run(debug=True)

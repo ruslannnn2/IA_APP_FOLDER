@@ -1,7 +1,8 @@
+function test(data) {
+
+  const dict = (data)
+  console.log(dict)
+
+}
 
 
-async function getProfile() {
-    
-  console.log("test")
-  }
-  

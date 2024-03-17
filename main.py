@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 
 
 #Flask Set up
-app = Flask(__name__)
+app = Flask(__name__) 
 app.secret_key = "hello_kamran"
 
 client_secret = "e43a7e158ede4a138f116cc70d63a449"
@@ -25,7 +25,7 @@ def indexpage():
 
 @app.route('/login', methods=['GET', 'POST'])
 def authorize():
-    scope = "user-read-private user-read-email"
+    scope = "user-read-private user-read-email playlist-read-private playlist-modify-private playlist-modify-public"
     
     params = {
          'client_id': client_id,
@@ -38,11 +38,12 @@ def authorize():
     auth_url = f"{AUTH_URL}?{urllib.parse.urlencode(params)}"
     return redirect(auth_url)
 	
+
     
 @app.route('/callback')
 def callback():
     if 'error' in request.args:
-        return "hello"
+        return render_template('index.html', error= "Acess Denied!" )
     if 'code' in request.args:
         req_body = {
             'code' : request.args['code'],
@@ -59,7 +60,23 @@ def callback():
         session['refresh_token'] = token_info['refresh_token']
         session['expires_at'] = datetime.now().timestamp() + token_info['expires_in']
 
-        return redirect('/')
+        return redirect('/home')
+    
+
+@app.route('/home')
+def home():
+    headers = {
+
+        'Authorization': f'Bearer {session['access_token']}'
+    }
+    response = requests.get(api_base_url + 'me/playlists' , headers= headers)
+  
+    playlists = response.json()
+    results = []
+    for items in playlists['items']:
+        results.append({'name' : items['name'], 'image_url': (items['images'])    })
+
+    return  render_template('home.html', data= playlists)
 
 	
 if __name__ == "__main__" :

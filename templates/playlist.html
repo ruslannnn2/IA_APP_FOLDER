@@ -1,21 +1,17 @@
-<html lang="en">
+<!DOCTYPE html>
 <script type="text/javascript" src="../static/functions.js"></script>
 <link href="../static/style.css" type="text/css" rel="stylesheet">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TESTBUILD</title>
 </head>
+<body id = 'goeshere'>
+    <script>
+        createTrackDivs({{data | tojson}})
 
-<body class = 'bg-black'>
 
-  <div id = "playlists" class = " relative space-x-3 flex items-stretch overflow-x-auto ">
- <script type="text/javascript">
-    createPlaylistDivs({{data | tojson}})
-
-  </script>
-    
-</div>
-
+    </script>
 </body>
 </html>

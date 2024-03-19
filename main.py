@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 #Flask Set up
 app = Flask(__name__) 
-app.secret_key = "hello_kamran"
+app.secret_key = "KSEWAceYWyA5Oao8Ee9NmjyWi7YIJfZd"
 
 client_secret = "e43a7e158ede4a138f116cc70d63a449"
 client_id = "1bc96559e04b4be1a0d5726ffe196590"
@@ -72,11 +72,23 @@ def home():
     response = requests.get(api_base_url + 'me/playlists' , headers= headers)
   
     playlists = response.json()
-    results = []
-    for items in playlists['items']:
-        results.append({'name' : items['name'], 'image_url': (items['images'])    })
-
     return  render_template('home.html', data= playlists)
+
+@app.route('/home/<pId>')
+def load_songs(pId):
+    headers = {
+
+        'Authorization': f'Bearer {session['access_token']}'
+    }
+    response = requests.get(api_base_url + 'playlists/' + pId + "/tracks" , headers= headers)
+    tracks = response.json()
+    songs =[]
+    for item in tracks['items']:
+        songs.append(item['track']['name'])
+
+    return render_template('playlist.html', data= tracks)
+
+
 
 	
 if __name__ == "__main__" :

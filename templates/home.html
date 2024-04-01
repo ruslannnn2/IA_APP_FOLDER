@@ -8,14 +8,60 @@
 </head>
 
 <body class = 'bg-black'>
+<div class = "h-64 bg-gradient-to-b from-fuchsia-500 to-pink-600">
+  <div class = 'flex justify-center'>
+    <input type="search" placeholder="Search for songs" id="search" class="flex w-64 rounded-lg text-center mt-3 bg-gray-700 font-semibold drop-shadow-lg">
+   <script type="text/javascript">
+    const searchInput = document.getElementById("search")
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key == "Enter"){
+        const value = e.target.value
+        console.log(value)
+        window.location.href = "http://127.0.0.1:5000/search/" + value
 
-  <div id = "playlists" class = " relative space-x-3 flex items-stretch overflow-x-auto ">
- <script type="text/javascript">
-    createPlaylistDivs({{data | tojson}})
-
-  </script>
-    
+      }
+  })
+   </script>
+  </div>
+<div class= "pt-20 text-6xl pl-3 font-semibold flex flex-row space-x-10 max-h-max">
+ <img class = " size-32 rounded-2xl " src="{{imagedata}}" alt="">
+ <div class = "flex">
+  Welcome, {{user}}
+ </div> 
 </div>
 
+
+
+
+
+</div>
+<div class = "text-white pl-3 mt-7 font-bold text-4xl mb-3">
+  Your Playlists
+</div>
+  <div id = "playlists" class = " relative space-x-3 flex items-stretch overflow-x-auto pb-5 ">
+ <script type="text/javascript">
+    createPlaylistDivs({{data | tojson}})
+    test({{userdata | tojson}})
+
+    
+  </script>
+     <a class="text-white flex-none bg-gray-800 rounded-xl py-6 px-3 first:pl-6 last:pr-6 h-40 w-40 transition hover:bg-slate-400" href="https://open.spotify.com/playlist/3OVdm5FQaCTdBHFC7PgtZz" target="_blank"> <div class = "flex flex-col items-center justify-center"> <img class= "size-20" src="https://image-cdn-ak.spotifycdn.com/image/ab67706c0000bebbcaba2325b058ec02774a5ac8" alt=""> <strong class="flex">So Help Me God</strong> </div> </a>
+     <a class="text-white flex-none bg-gray-800 rounded-xl py-6 px-3 first:pl-6 last:pr-6 h-40 w-40 transition hover:bg-slate-400" href="https://open.spotify.com/playlist/0fU454UT7LxhwV3fpGiuqJ" target="_blank">quizzicals + testicals II</a>
+     <a class="text-white flex-none bg-gray-800 rounded-xl py-6 px-3 first:pl-6 last:pr-6 h-40 w-40 transition hover:bg-slate-400" href="https://open.spotify.com/playlist/1IgvvBdMEFgNyaBFjSLYK3" target="_blank">BECK - Mongolian Chop Squad</a>
+     <a class="text-white flex-none bg-gray-800 rounded-xl py-6 px-3 first:pl-6 last:pr-6 h-40 w-40 transition hover:bg-slate-400" href="https://open.spotify.com/playlist/7krjsdEvkl8rcJNYnp6g0A" target="_blank">bow ts phhhh taaaa</a>
+     <a class="text-white flex-none bg-gray-800 rounded-xl py-6 px-3 first:pl-6 last:pr-6 h-40 w-40 transition hover:bg-slate-400" href="https://open.spotify.com/playlist/1q8cl8Hggsg1y1qjDMdhSr" target="_blank">orchestral/scores</a>
+     <a class="text-white flex-none bg-gray-800 rounded-xl py-6 px-3 first:pl-6 last:pr-6 h-40 w-40 transition hover:bg-slate-400" href="https://open.spotify.com/playlist/5IHtM3xFMsyDjp1mA8HSWc" target="_blank">vintage</a>
+     <a class="text-white flex-none bg-gray-800 rounded-xl py-6 px-3 first:pl-6 last:pr-6 h-40 w-40 transition hover:bg-slate-400" href="https://open.spotify.com/playlist/3RfIKcsqod9CJ5SygSuaqC" target="_blank">off 40 benadryl </a>
+     <a class="text-white flex-none bg-gray-800 rounded-xl py-6 px-3 first:pl-6 last:pr-6 h-40 w-40 transition hover:bg-slate-400" href="https://open.spotify.com/playlist/11QDbDibjNgzgwg6aWhlOY" target="_blank">thug remix</a>
+     <a class="text-white flex-none bg-gray-800 rounded-xl py-6 px-3 first:pl-6 last:pr-6 h-40 w-40 transition hover:bg-slate-400" href="https://open.spotify.com/playlist/7KVhhyEqzhCrPHohN6gHPs" target="_blank">classicks</a>
+     <a class="text-white flex-none bg-gray-800 rounded-xl py-6 px-3 first:pl-6 last:pr-6 h-40 w-40 transition hover:bg-slate-400" href="https://open.spotify.com/playlist/1iKqIS6PVVnqoeguwn4CcL" target="_blank">Русский Поп 2000е</a>
+     <a class="text-white flex-none bg-gray-800 rounded-xl py-6 px-3 first:pl-6 last:pr-6 h-40 w-40 transition hover:bg-slate-400" href="https://open.spotify.com/playlist/0kYcWIJXEas3UzeXsSb3P4" target="_blank">crushing rocks</a>
+     <a class="text-white flex-none bg-gray-800 rounded-xl py-6 px-3 first:pl-6 last:pr-6 h-40 w-40 transition hover:bg-slate-400" href="https://open.spotify.com/playlist/37i9dQZF1EJw75KkoTP7aW" target="_blank">bigboi + Ruslan</a>
+     
+</div>
+</div>
+<div class = "text-white pl-3 mt-7 font-bold text-4xl mb-3">
+  Your Saved Songs
+</div>
 </body>
 </html>

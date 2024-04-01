@@ -2,7 +2,7 @@ from flask import Flask , render_template, flash, redirect, request, session, ma
 import requests
 import urllib.parse
 from datetime import datetime, timedelta
-
+from googlesearch import search
 
 
 #Flask Set up
@@ -72,7 +72,12 @@ def home():
     response = requests.get(api_base_url + 'me/playlists' , headers= headers)
   
     playlists = response.json()
-    return  render_template('home.html', data= playlists)
+    
+    responseUser = requests.get(api_base_url + 'me' , headers= headers)
+    user = responseUser.json()
+    return  render_template('home.html', data= playlists , imagedata= user['images'][1]['url'], user = user['display_name'], userdata = user)
+
+
 
 @app.route('/home/<pId>')
 def load_songs(pId):
@@ -82,12 +87,44 @@ def load_songs(pId):
     }
     response = requests.get(api_base_url + 'playlists/' + pId + "/tracks" , headers= headers)
     tracks = response.json()
-    songs =[]
-    for item in tracks['items']:
-        songs.append(item['track']['name'])
+   
 
     return render_template('playlist.html', data= tracks)
 
+@app.route('/home/<pId>/<tName>/<tArtist>')
+def loud_resources(pId,tName,tArtist):
+    list = []
+    for link in search(tName + " " + tArtist + "guitar tabs" ,num=5, stop= 5):
+        list.append(str(link))
+    return render_template('track.html', data = list, )
+
+@app.route('/home/<tName>/<tArtist>')
+def search_results(tName,tArtist):
+    list = []
+    for link in search(tName + " " + tArtist + "guitar tabs" ,num=5, stop= 5):
+        list.append(str(link))
+    return render_template('track.html', data = list, )
+
+
+@app.route('/search/<songcreds>')
+def search_method(songcreds):
+
+    headers = {
+
+        'Authorization': f'Bearer {session['access_token']}'
+    }
+    params ={
+        'q' : songcreds,
+        'type' : 'track',
+        'offset' : "5",
+
+    }
+
+    search_url = f"{api_base_url}search?{urllib.parse.urlencode(params)}"
+    search_request = requests.get(search_url, headers= headers)
+    temp = search_request.json()['tracks']['items']
+    
+    return render_template('search.html', data = temp)
 
 
 	

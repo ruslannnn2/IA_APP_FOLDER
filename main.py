@@ -11,7 +11,7 @@ app.secret_key = "KSEWAceYWyA5Oao8Ee9NmjyWi7YIJfZd"
 
 client_secret = "e43a7e158ede4a138f116cc70d63a449"
 client_id = "1bc96559e04b4be1a0d5726ffe196590"
-redirect_uri = "http://127.0.0.1:5000/callback"
+redirect_uri = "https://ruslanguy.pythonanywhere.com/callback"
 
 AUTH_URL = "https://accounts.spotify.com/authorize"
 token_url = "https://accounts.spotify.com/api/token"
@@ -25,7 +25,7 @@ def indexpage():
 
 @app.route('/login', methods=['GET', 'POST'])
 def authorize():
-    scope = "user-read-private user-read-email playlist-read-private playlist-modify-private playlist-modify-public"
+    scope = "user-read-private user-read-email playlist-read-private playlist-modify-private playlist-modify-public user-library-read"
     
     params = {
          'client_id': client_id,
@@ -69,13 +69,21 @@ def home():
 
         'Authorization': f'Bearer {session['access_token']}'
     }
-    response = requests.get(api_base_url + 'me/playlists' , headers= headers)
+    response = requests.get(api_base_url + 'me/playlists?limit=50' , headers= headers)
   
     playlists = response.json()
     
+    #user data
     responseUser = requests.get(api_base_url + 'me' , headers= headers)
     user = responseUser.json()
-    return  render_template('home.html', data= playlists , imagedata= user['images'][1]['url'], user = user['display_name'], userdata = user)
+
+    #save user id for future calls
+    session['user_id'] = user['id']
+
+    #user's saved songs
+    savedSongsResponse =  requests.get(api_base_url + 'me/tracks?limit=50' , headers= headers)
+    savedSongs = savedSongsResponse.json()
+    return  render_template('home.html', data= playlists , imagedata= user['images'][1]['url'], user = user['display_name'], userdata = user , savedSongs = savedSongs)
 
 
 
@@ -91,19 +99,24 @@ def load_songs(pId):
 
     return render_template('playlist.html', data= tracks)
 
+
+
 @app.route('/home/<pId>/<tName>/<tArtist>')
 def loud_resources(pId,tName,tArtist):
     list = []
     for link in search(tName + " " + tArtist + "guitar tabs" ,num=5, stop= 5):
         list.append(str(link))
-    return render_template('track.html', data = list, )
+
+    return render_template('track.html', data = list , song = tName , artist = tArtist) 
+
+
 
 @app.route('/home/<tName>/<tArtist>')
 def search_results(tName,tArtist):
     list = []
     for link in search(tName + " " + tArtist + "guitar tabs" ,num=5, stop= 5):
         list.append(str(link))
-    return render_template('track.html', data = list, )
+    return render_template('track.html', data = list, song = tName , artist = tArtist )
 
 
 @app.route('/search/<songcreds>')

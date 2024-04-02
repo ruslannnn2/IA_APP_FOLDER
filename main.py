@@ -11,7 +11,7 @@ app.secret_key = "KSEWAceYWyA5Oao8Ee9NmjyWi7YIJfZd"
 
 client_secret = "e43a7e158ede4a138f116cc70d63a449"
 client_id = "1bc96559e04b4be1a0d5726ffe196590"
-redirect_uri = "https://ruslanguy.pythonanywhere.com/callback"
+redirect_uri = "http://127.0.0.1:5000/callback"
 
 AUTH_URL = "https://accounts.spotify.com/authorize"
 token_url = "https://accounts.spotify.com/api/token"
@@ -67,7 +67,7 @@ def callback():
 def home():
     headers = {
 
-        'Authorization': f'Bearer {session['access_token']}'
+        'Authorization': f'Bearer {session["access_token"]}'
     }
     response = requests.get(api_base_url + 'me/playlists?limit=50' , headers= headers)
   
@@ -91,7 +91,7 @@ def home():
 def load_songs(pId):
     headers = {
 
-        'Authorization': f'Bearer {session['access_token']}'
+        'Authorization': f'Bearer {session["access_token"]}'
     }
     response = requests.get(api_base_url + 'playlists/' + pId + "/tracks" , headers= headers)
     tracks = response.json()
@@ -124,7 +124,7 @@ def search_method(songcreds):
 
     headers = {
 
-        'Authorization': f'Bearer {session['access_token']}'
+        'Authorization': f'Bearer {session["access_token"]}'
     }
     params ={
         'q' : songcreds,

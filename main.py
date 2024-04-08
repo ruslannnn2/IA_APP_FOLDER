@@ -140,6 +140,70 @@ def search_method(songcreds):
     return render_template('search.html', data = temp)
 
 
+@app.route('/home/<playlist_id>/<songcreds>/addsong')
+def add_song(playlist_id,songcreds):
+
+    headers = {
+
+        'Authorization': f'Bearer {session["access_token"]}'
+    }
+    params ={
+        'q' : songcreds,
+        'type' : 'track',
+        'offset' : "5",
+
+    }
+
+    search_url = f"{api_base_url}search?{urllib.parse.urlencode(params)}"
+    search_request = requests.get(search_url, headers= headers)
+    temp = search_request.json()['tracks']['items']
+    
+    return render_template('addsong.html', data = temp)
+
+@app.route('/home/<playlist_id>/<songcreds>/addsong/<uri>/add')
+def song_added(playlist_id,songcreds,uri):
+
+    headers = {
+        "Content-Type": "application/json",
+        "accept": "application/json",
+        "Authorization": f'Bearer {session["access_token"]}'
+    }
+    params ={
+        'uris' : [uri],
+        'position' : 0,
+   
+    }
+    
+    url = f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
+
+    response = requests.request("POST", url, json=params, headers=headers)
+
+
+    return redirect("/home")
+
+
+@app.route('/create')
+def playlistpage():
+    return render_template('create.html')
+
+@app.route('/create/<pName>/<pDesc>')
+def playlistCreate(pName,pDesc):
+    reqBody = {
+        'name' : pName,
+        'description' : pDesc,
+        'public' : False
+    }   
+    
+    headers = {
+
+        'Authorization': f'Bearer {session["access_token"]}'
+    }
+
+    req = requests.post(api_base_url + 'users/' + session["user_id"] + "/playlists", headers= headers, json= reqBody)
+
+
+    return redirect('/home')
+
 	
 if __name__ == "__main__" :
     app.run(debug=True)

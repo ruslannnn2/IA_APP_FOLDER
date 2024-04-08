@@ -1,6 +1,3 @@
-
-
-
 function test(data) {
 
  
@@ -53,7 +50,7 @@ function createTrackDivs(data){
   for (let i = 0 ; i < data['items'].length; i++){
     temp = document.createElement('a');
     temp.className = "bg-slate-600 w-80 text-white font-semibold rounded-lg pl-5 items-center text-lg ml-5 transition hover:bg-slate-400"
-    temp.innerHTML = data['items'][i]['track']['name']
+    temp.innerHTML = data['items'][i]['track']['name'] + " - " + data['items'][i]['track']['artists'][0]['name']
     temp.href = window.location.href + '/' + data['items'][i]['track']['name'] + '/' + data['items'][i]['track']['artists'][0]['name']
     document.getElementById('tracks').appendChild(temp)   
   }
@@ -71,6 +68,19 @@ function createSearchDivs(data){
   }
 
 }
+
+function createSearchAddDivs(data){
+  for (let i = 0; i < data.length; i++){
+    console.log(data[i]['name'])
+    temp = document.createElement('a');
+    temp.className = "bg-slate-600 w-80 text-white font-semibold rounded-lg pl-5 items-center text-lg ml-5 transition hover:bg-slate-400"
+    temp.innerHTML = data[i]['name'] + " - " + data[i]['artists'][0]['name']
+    temp.href = window.location.href + "/" + data[i]['uri'] + "/add"
+    document.getElementById('tracks').appendChild(temp)  
+  }
+
+}
+
 
 
 function createResourceDivs(data){
@@ -141,4 +151,26 @@ function createSavedDivs(data){
   document.getElementById("scont" + i).appendChild(title)
   
   }
+}
+
+
+function createPlaylist(){
+  let submitBtn = document.getElementById('submit')
+
+  submitBtn.addEventListener("click", (e) => {
+    let name = document.getElementById('name')
+    let description = document.getElementById('description')
+
+    if (name.value == "" || description.value == ""){
+      name.value = name.value
+      description.value = description.value
+      alert("Please fill out all fields!")
+    } else {
+      window.location.href = "http://127.0.0.1:5000/create/" + name.value + "/" + description.value
+
+    }
+
+  })
+
+
 }
